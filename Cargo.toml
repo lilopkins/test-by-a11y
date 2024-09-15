@@ -4,5 +4,7 @@ version = "0.0.0"
 edition = "2021"
 description = "Write tests for UIs through the accessibility interface."
 authors = ["Lily Hopkins <lily@hpkns.uk>"]
+license = "MIT"
+repository = "https://github.com/lilopkins/test-by-a11y"
 
 [dependencies]
