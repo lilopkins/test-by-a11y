@@ -8,7 +8,7 @@ where
     F: FnOnce(panic::AssertUnwindSafe<&mut TestByATSPI>) -> () + panic::UnwindSafe,
 {
     // Start logging
-    pretty_env_logger::init();
+    let _ = pretty_env_logger::try_init();
 
     // Start the program
     log::debug!("Starting program...");
