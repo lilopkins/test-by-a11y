@@ -10,8 +10,8 @@ use futures::future::try_join_all;
 
 use crate::prelude::*;
 
-const PROXY_DESTINATION: &'static str = "org.a11y.atspi.Registry";
-const PROXY_INTERFACE: &'static str = "org.a11y.atspi.Accessible";
+const PROXY_DESTINATION: &str = "org.a11y.atspi.Registry";
+const PROXY_INTERFACE: &str = "org.a11y.atspi.Accessible";
 
 #[derive(Clone, Debug)]
 struct TreeNode {
@@ -20,7 +20,7 @@ struct TreeNode {
 
     accessible_id: Option<String>,
     name: Option<String>,
-    role: Role,
+    _role: Role,
     children: Vec<TreeNode>,
 }
 
@@ -77,7 +77,7 @@ impl TreeNode {
                     path: details.path,
                     accessible_id: details.accessible_id,
                     name: details.name,
-                    role: details.role,
+                    _role: details.role,
                     children: Vec::new(),
                 })
                 .collect::<Vec<_>>();
@@ -94,7 +94,7 @@ impl TreeNode {
                 path,
                 accessible_id,
                 name,
-                role,
+                _role: role,
                 children,
             });
         }
@@ -218,7 +218,7 @@ impl<'p> TestByATSPI<'p> {
             }
         }
 
-        if potential_matches.len() == 0 {
+        if potential_matches.is_empty() {
             log::debug!("No app match");
             return Err(TestByATSPIError::CannotFindApplication);
         }
@@ -295,7 +295,7 @@ impl<'p> TestByATSPI<'p> {
                         return Ok(());
                     }
                 }
-                return Err(TestByATSPIError::CannotFindAction);
+                Err(TestByATSPIError::CannotFindAction)
             }
         }
     }
