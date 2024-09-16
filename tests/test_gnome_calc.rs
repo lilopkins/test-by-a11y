@@ -1,4 +1,4 @@
-use std::{panic, process::Command};
+use std::{panic, process::Command, thread::sleep, time::Duration};
 
 use test_by_a11y::prelude::*;
 
@@ -7,6 +7,9 @@ fn start_test<F>(test_script: F)
 where
     F: FnOnce(panic::AssertUnwindSafe<&mut TestByATSPI>) -> () + panic::UnwindSafe,
 {
+    // Delay between tests to prevent dbus issues.
+    sleep(Duration::from_millis(1000));
+
     // Start logging
     let _ = pretty_env_logger::try_init();
 
