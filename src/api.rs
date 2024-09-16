@@ -14,7 +14,10 @@ pub trait TestByA11y: Sized {
     fn find(&mut self, by: By) -> Result<Option<Self::Node>, Self::Error>;
 
     /// Interact with a node.
-    fn interact(&mut self, node: Self::Node, interaction: Interaction) -> Result<(), Self::Error>;
+    fn interact(&mut self, node: &Self::Node, interaction: Interaction) -> Result<(), Self::Error>;
+
+    /// Get the text from a node.
+    fn get_text(&mut self, node: &Self::Node) -> Result<String, Self::Error>;
 }
 
 /// Ways we can find nodes
