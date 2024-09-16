@@ -267,7 +267,7 @@ impl<'p> TestByATSPI<'p> {
 
     async fn interact_impl(
         &mut self,
-        node: <TestByATSPI<'p> as TestByA11y>::Node,
+        node: &<TestByATSPI<'p> as TestByA11y>::Node,
         interaction: Interaction,
     ) -> Result<(), <TestByATSPI<'p> as TestByA11y>::Error> {
         log::debug!("Interaction {interaction:?} on {}", node.name().await?);
@@ -300,6 +300,13 @@ impl<'p> TestByATSPI<'p> {
         }
     }
 
+    async fn get_text_impl(
+        &mut self,
+        node: &<TestByATSPI<'p> as TestByA11y>::Node,
+    ) -> Result<String, <TestByATSPI<'p> as TestByA11y>::Error> {
+        Ok(node.name().await?)
+    }
+
     async fn build_tree(&self) -> Result<TreeNode, atspi::AtspiError> {
         log::trace!("Building tree");
         TreeNode::from_accessible_proxy(self.root_proxy.clone()).await
@@ -323,10 +330,17 @@ impl<'p> TestByA11y for TestByATSPI<'p> {
         r
     }
 
-    fn interact(&mut self, node: Self::Node, interaction: Interaction) -> Result<(), Self::Error> {
+    fn interact(&mut self, node: &Self::Node, interaction: Interaction) -> Result<(), Self::Error> {
         log::trace!("interact(node: {node:?}, interaction: {interaction:?})");
         let r = futures::executor::block_on(self.interact_impl(node, interaction));
         log::trace!("interact(node: ..., interaction: {interaction:?}) = {r:?}");
+        r
+    }
+
+    fn get_text(&mut self, node: &Self::Node) -> Result<String, Self::Error> {
+        log::trace!("get_text(node: {node:?})");
+        let r = futures::executor::block_on(self.get_text_impl(node));
+        log::trace!("get_text(node: ...) = {r:?}");
         r
     }
 }
